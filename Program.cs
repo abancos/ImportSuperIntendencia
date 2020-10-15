@@ -55,7 +55,8 @@ namespace ImportSuperIntendencia
                         var maxDateEF_IngresosFinancieros = context.EF_IngresosFinancieros.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                         var maxDateEF_GastosFinancieros = context.EF_GastosFinancieros.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                         var maxDateEF_OtrosIngresosOperacionales = context.EF_OtrosIngresosOperacionales.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
-                         var maxDateEF_OtrosGastosOperacionales = context.EF_OtrosGastosOperacionales.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
+                        var maxDateEF_OtrosGastosOperacionales = context.EF_OtrosGastosOperacionales.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault(); 
+                        var maxDateEF_GastosOperativos = context.EF_GastosOperativos.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                         var date = DateTime.Parse(firstSheet.Cells[8, i].Text);
 
 
@@ -471,17 +472,21 @@ namespace ImportSuperIntendencia
                             context.SaveChanges();
                         }
                         #endregion
-                        #region EF_OtrosGastosOperacionales
-                        if (date > maxDateEF_OtrosGastosOperacionales)
+
+                        #region EF_GastosOperativos
+                        if (date > maxDateEF_GastosOperativos)
                         {
-                            var fd = new EF_OtrosGastosOperacionales()
+                            var fd = new EF_GastosOperativos()
                             {
                                 Fecha = DateTime.Parse(firstSheet.Cells[8, i].Text),
-                                ComisionesporServicios = decimal.Parse((firstSheet.Cells[175, i].Value ?? 0).ToString()),
-                                GastosDiversos = decimal.Parse((firstSheet.Cells[176, i].Value ?? 0).ToString()),
-                                Subtotal = decimal.Parse((firstSheet.Cells[177, i].Value ?? 0).ToString()),
+                                SueldosCompensacionesPersonal = decimal.Parse((firstSheet.Cells[180, i].Value ?? 0).ToString()),
+                                ServiciosATerceros = decimal.Parse((firstSheet.Cells[181, i].Value ?? 0).ToString()),
+                                DepreciacionAmortizaciones = decimal.Parse((firstSheet.Cells[182, i].Value ?? 0).ToString()),
+                                OtrasProvisiones = decimal.Parse((firstSheet.Cells[183, i].Value ?? 0).ToString()),
+                                OtrosGastos = decimal.Parse((firstSheet.Cells[184, i].Value ?? 0).ToString()),
+                                Subtotal = decimal.Parse((firstSheet.Cells[185, i].Value ?? 0).ToString()),
                             };
-                            context.EF_OtrosGastosOperacionales.Add(fd);
+                            context.EF_GastosOperativos.Add(fd);
                             context.SaveChanges();
                         }
                         #endregion
