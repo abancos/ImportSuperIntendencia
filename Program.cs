@@ -382,6 +382,7 @@ namespace ImportSuperIntendencia
                             context.SaveChanges();
                         }
                         #endregion
+
                         #region EF_PatrimonioNeto
                         if (date > maxDateEF_PatrimonioNeto)
                         {

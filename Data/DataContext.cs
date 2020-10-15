@@ -32,6 +32,7 @@ namespace ImportSuperIntendencia.Data
         public DbSet<EF_ObligacionesSubordinadas> EF_ObligacionesSubordinadas { get; set; }
         public DbSet<EF_TotalPasivos> EF_TotalPasivos { get; set; }
         public DbSet<EF_PatrimonioNeto> EF_PatrimonioNeto { get; set; }
+        public DbSet<EF_TotaldePasivosPatrimonio> EF_TotaldePasivosPatrimonio { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(@"Server=.;Database=EstadosFinancieros;Trusted_Connection=True;");
