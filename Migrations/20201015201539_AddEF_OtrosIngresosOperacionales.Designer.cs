@@ -4,14 +4,16 @@ using ImportSuperIntendencia.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ImportSuperIntendencia.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20201015201539_AddEF_OtrosIngresosOperacionales")]
+    partial class AddEF_OtrosIngresosOperacionales
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -410,25 +412,6 @@ namespace ImportSuperIntendencia.Migrations
                     b.HasKey("Fecha");
 
                     b.ToTable("EF_OtrosActivos");
-                });
-
-            modelBuilder.Entity("ImportSuperIntendencia.Models.EF_OtrosGastosOperacionales", b =>
-                {
-                    b.Property<DateTime>("Fecha")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("ComisionesporServicios")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("GastosDiversos")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Subtotal")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Fecha");
-
-                    b.ToTable("EF_OtrosGastosOperacionales");
                 });
 
             modelBuilder.Entity("ImportSuperIntendencia.Models.EF_OtrosIngresosOperacionales", b =>

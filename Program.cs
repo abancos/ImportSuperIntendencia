@@ -54,6 +54,8 @@ namespace ImportSuperIntendencia
                         var maxDateEF_TotaldePasivosPatrimonio = context.EF_TotaldePasivosPatrimonio.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                         var maxDateEF_IngresosFinancieros = context.EF_IngresosFinancieros.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                         var maxDateEF_GastosFinancieros = context.EF_GastosFinancieros.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
+                        var maxDateEF_OtrosIngresosOperacionales = context.EF_OtrosIngresosOperacionales.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
+                         var maxDateEF_OtrosGastosOperacionales = context.EF_OtrosGastosOperacionales.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                         var date = DateTime.Parse(firstSheet.Cells[8, i].Text);
 
 
@@ -437,6 +439,7 @@ namespace ImportSuperIntendencia
                             context.SaveChanges();
                         }
                         #endregion
+
                         #region EF_GastosFinancieros
                         if (date > maxDateEF_GastosFinancieros)
                         {
@@ -449,6 +452,36 @@ namespace ImportSuperIntendencia
                                 Subtotal = decimal.Parse((firstSheet.Cells[156, i].Value ?? 0).ToString()),
                             };
                             context.EF_GastosFinancieros.Add(fd);
+                            context.SaveChanges();
+                        }
+                        #endregion 
+
+                        #region EF_OtrosIngresosOperacionales
+                        if (date > maxDateEF_OtrosIngresosOperacionales)
+                        {
+                            var fd = new EF_OtrosIngresosOperacionales()
+                            {
+                                Fecha = DateTime.Parse(firstSheet.Cells[8, i].Text),
+                                ComisionesporServicios = decimal.Parse((firstSheet.Cells[169, i].Value ?? 0).ToString()),
+                                ComisionesporCambio = decimal.Parse((firstSheet.Cells[170, i].Value ?? 0).ToString()),
+                                IngresosDiversos = decimal.Parse((firstSheet.Cells[171, i].Value ?? 0).ToString()),
+                                Subtotal = decimal.Parse((firstSheet.Cells[172, i].Value ?? 0).ToString()),
+                            };
+                            context.EF_OtrosIngresosOperacionales.Add(fd);
+                            context.SaveChanges();
+                        }
+                        #endregion
+                        #region EF_OtrosGastosOperacionales
+                        if (date > maxDateEF_OtrosGastosOperacionales)
+                        {
+                            var fd = new EF_OtrosGastosOperacionales()
+                            {
+                                Fecha = DateTime.Parse(firstSheet.Cells[8, i].Text),
+                                ComisionesporServicios = decimal.Parse((firstSheet.Cells[175, i].Value ?? 0).ToString()),
+                                GastosDiversos = decimal.Parse((firstSheet.Cells[176, i].Value ?? 0).ToString()),
+                                Subtotal = decimal.Parse((firstSheet.Cells[177, i].Value ?? 0).ToString()),
+                            };
+                            context.EF_OtrosGastosOperacionales.Add(fd);
                             context.SaveChanges();
                         }
                         #endregion
