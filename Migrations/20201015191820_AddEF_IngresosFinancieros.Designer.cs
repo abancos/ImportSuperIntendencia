@@ -4,14 +4,16 @@ using ImportSuperIntendencia.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ImportSuperIntendencia.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20201015191820_AddEF_IngresosFinancieros")]
+    partial class AddEF_IngresosFinancieros
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -231,28 +233,6 @@ namespace ImportSuperIntendencia.Migrations
                     b.HasKey("Fecha");
 
                     b.ToTable("EF_FondosTomadosPrestamos");
-                });
-
-            modelBuilder.Entity("ImportSuperIntendencia.Models.EF_GastosFinancieros", b =>
-                {
-                    b.Property<DateTime>("Fecha")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("InteresesComisionesFinanciamiento")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("InteresesporCaptaciones")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("PerdidasporInversiones")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Subtotal")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Fecha");
-
-                    b.ToTable("EF_GastosFinancieros");
                 });
 
             modelBuilder.Entity("ImportSuperIntendencia.Models.EF_IngresosFinancieros", b =>

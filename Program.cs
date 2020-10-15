@@ -51,6 +51,9 @@ namespace ImportSuperIntendencia
                         var maxDateEF_ObligacionesSubordinadas = context.EF_ObligacionesSubordinadas.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                         var maxDateEF_TotalPasivos = context.EF_TotalPasivos.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                         var maxDateEF_PatrimonioNeto = context.EF_PatrimonioNeto.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
+                        var maxDateEF_TotaldePasivosPatrimonio = context.EF_TotaldePasivosPatrimonio.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
+                        var maxDateEF_IngresosFinancieros = context.EF_IngresosFinancieros.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
+                        var maxDateEF_GastosFinancieros = context.EF_GastosFinancieros.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                         var date = DateTime.Parse(firstSheet.Cells[8, i].Text);
 
 
@@ -400,6 +403,52 @@ namespace ImportSuperIntendencia
                                 TotalPatrimonioNeto = decimal.Parse((firstSheet.Cells[136, i].Value ?? 0).ToString()),
                             };
                             context.EF_PatrimonioNeto.Add(fd);
+                            context.SaveChanges();
+                        }
+                        #endregion   
+
+                        #region EF_TotaldePasivosPatrimonio
+                        if (date > maxDateEF_TotaldePasivosPatrimonio)
+                        {
+                            var fd = new EF_TotaldePasivosPatrimonio()
+                            {
+                                Fecha = DateTime.Parse(firstSheet.Cells[8, i].Text),
+                                TotalPasivosPatrimonio = decimal.Parse((firstSheet.Cells[138, i].Value ?? 0).ToString()),
+                                CuentasContingentes = decimal.Parse((firstSheet.Cells[140, i].Value ?? 0).ToString()),
+                                CuentasOrden = decimal.Parse((firstSheet.Cells[141, i].Value ?? 0).ToString()),
+                            };
+                            context.EF_TotaldePasivosPatrimonio.Add(fd);
+                            context.SaveChanges();
+                        }
+                        #endregion        
+
+                        #region EF_EF_IngresosFinancieros
+                        if (date > maxDateEF_IngresosFinancieros)
+                        {
+                            var fd = new EF_IngresosFinancieros()
+                            {
+                                Fecha = DateTime.Parse(firstSheet.Cells[8, i].Text),
+                                InteresesComisionesCredito = decimal.Parse((firstSheet.Cells[147, i].Value ?? 0).ToString()),
+                                InteresesInversiones = decimal.Parse((firstSheet.Cells[148, i].Value ?? 0).ToString()),
+                                GananciasInversiones = decimal.Parse((firstSheet.Cells[149, i].Value ?? 0).ToString()),
+                                Subtotal = decimal.Parse((firstSheet.Cells[150, i].Value ?? 0).ToString()),
+                            };
+                            context.EF_IngresosFinancieros.Add(fd);
+                            context.SaveChanges();
+                        }
+                        #endregion
+                        #region EF_GastosFinancieros
+                        if (date > maxDateEF_GastosFinancieros)
+                        {
+                            var fd = new EF_GastosFinancieros()
+                            {
+                                Fecha = DateTime.Parse(firstSheet.Cells[8, i].Text),
+                                InteresesporCaptaciones = decimal.Parse((firstSheet.Cells[153, i].Value ?? 0).ToString()),
+                                PerdidasporInversiones = decimal.Parse((firstSheet.Cells[154, i].Value ?? 0).ToString()),
+                                InteresesComisionesFinanciamiento = decimal.Parse((firstSheet.Cells[155, i].Value ?? 0).ToString()),
+                                Subtotal = decimal.Parse((firstSheet.Cells[156, i].Value ?? 0).ToString()),
+                            };
+                            context.EF_GastosFinancieros.Add(fd);
                             context.SaveChanges();
                         }
                         #endregion
