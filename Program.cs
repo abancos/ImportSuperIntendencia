@@ -22,7 +22,8 @@ namespace ImportSuperIntendencia
 
 
 
-               int fondosInt = GetCell("Fondos Disponibles", "");
+               int fondosDis = GetCell("Fondos Disponibles", "");
+               int fondosInt = GetCell("Fondos Interbancarios", "");
 
                 int totalRows = firstSheet.Dimension.End.Row;
                 int totalCols = firstSheet.Dimension.End.Column;
@@ -35,7 +36,7 @@ namespace ImportSuperIntendencia
 
                     using (var context = new DataContext())
                     {
-
+                        #region dates
                         var maxDateFondosDisponibles = context.EF_FondosDisponibles.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                         var maxDateFondosInterbancariosActivos = context.EF_FondosInterbancariosActivos.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                         var maxDateInversiones = context.EF_Inversiones.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
@@ -66,8 +67,8 @@ namespace ImportSuperIntendencia
                         var maxDateEF_GastosOperativos = context.EF_GastosOperativos.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                         var maxDateEF_OtrosIngresos = context.EF_OtrosIngresos.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                         var date = DateTime.Parse(firstSheet.Cells[8, i].Text);
+                        #endregion
 
-                       
                         #region EF_FondosDisponibles
                         if (date > maxDateFondosDisponibles)
                         {
@@ -75,13 +76,13 @@ namespace ImportSuperIntendencia
                             var std = new EF_FondosDisponibles()
                             {
                                 Fecha = DateTime.Parse(firstSheet.Cells[8, i].Text),
-                                Caja = decimal.Parse((firstSheet.Cells[fondosInt + 1, i].Value ?? 0).ToString()),
-                                BancoCentral = decimal.Parse((firstSheet.Cells[fondosInt + 2, i].Value ?? 0).ToString()),
-                                BancosPais = decimal.Parse((firstSheet.Cells[fondosInt + 3, i].Value ?? 0).ToString()),
-                                BancosExtranjeros = decimal.Parse((firstSheet.Cells[fondosInt + 4, i].Value ?? 0).ToString()),
-                                Otras = decimal.Parse((firstSheet.Cells[fondosInt + 5, i].Value ?? 0).ToString()),
-                                RendimientosCobrar = decimal.Parse((firstSheet.Cells[fondosInt + 6, i].Value ?? 0).ToString()),
-                                Subtotal = decimal.Parse((firstSheet.Cells[fondosInt + 7, i].Value ?? 0).ToString()),
+                                Caja = decimal.Parse((firstSheet.Cells[fondosDis + 1, i].Value ?? 0).ToString()),
+                                BancoCentral = decimal.Parse((firstSheet.Cells[fondosDis + 2, i].Value ?? 0).ToString()),
+                                BancosPais = decimal.Parse((firstSheet.Cells[fondosDis + 3, i].Value ?? 0).ToString()),
+                                BancosExtranjeros = decimal.Parse((firstSheet.Cells[fondosDis + 4, i].Value ?? 0).ToString()),
+                                Otras = decimal.Parse((firstSheet.Cells[fondosDis + 5, i].Value ?? 0).ToString()),
+                                RendimientosCobrar = decimal.Parse((firstSheet.Cells[fondosDis + 6, i].Value ?? 0).ToString()),
+                                Subtotal = decimal.Parse((firstSheet.Cells[fondosDis + 7, i].Value ?? 0).ToString()),
                             };
                             context.EF_FondosDisponibles.Add(std);
                             context.SaveChanges();
@@ -94,9 +95,9 @@ namespace ImportSuperIntendencia
                             var fd = new EF_FondosInterbancariosActivos()
                             {
                                 Fecha = DateTime.Parse(firstSheet.Cells[8, i].Text),
-                                FondosBancarios = decimal.Parse((firstSheet.Cells[21, i].Value ?? 0).ToString()),
-                                RendimientosporCobrar = decimal.Parse(firstSheet.Cells[22, i].Value.ToString(), NumberStyles.Any),
-                                Subtotal = decimal.Parse(firstSheet.Cells[23, i].Value.ToString(), NumberStyles.Any),
+                                FondosBancarios = decimal.Parse((firstSheet.Cells[fondosInt +1, i].Value ?? 0).ToString()),
+                                RendimientosporCobrar = decimal.Parse(firstSheet.Cells[fondosInt+2, i].Value.ToString(), NumberStyles.Any),
+                                Subtotal = decimal.Parse(firstSheet.Cells[fondosInt+3, i].Value.ToString(), NumberStyles.Any),
                             };
                             context.EF_FondosInterbancariosActivos.Add(fd);
                             context.SaveChanges();
