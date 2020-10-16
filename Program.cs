@@ -6,6 +6,7 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace ImportSuperIntendencia
 {
@@ -19,9 +20,15 @@ namespace ImportSuperIntendencia
             {
                 var firstSheet = package.Workbook.Worksheets["BANCOS MULTIPLES"];
 
+
+
+               int fondosInt = GetCell("Fondos Disponibles", "");
+
                 int totalRows = firstSheet.Dimension.End.Row;
                 int totalCols = firstSheet.Dimension.End.Column;
                 var range = firstSheet.Cells[1, 1, 1, totalCols];
+
+
                 for (int i = 2; i <= totalCols; i++)
                 {
                     Console.WriteLine(firstSheet.Cells[8, i].Text + " - " + firstSheet.Cells[12, i].Text);
@@ -55,25 +62,26 @@ namespace ImportSuperIntendencia
                         var maxDateEF_IngresosFinancieros = context.EF_IngresosFinancieros.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                         var maxDateEF_GastosFinancieros = context.EF_GastosFinancieros.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                         var maxDateEF_OtrosIngresosOperacionales = context.EF_OtrosIngresosOperacionales.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
-                        var maxDateEF_OtrosGastosOperacionales = context.EF_OtrosGastosOperacionales.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault(); 
+                        var maxDateEF_OtrosGastosOperacionales = context.EF_OtrosGastosOperacionales.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                         var maxDateEF_GastosOperativos = context.EF_GastosOperativos.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                         var maxDateEF_OtrosIngresos = context.EF_OtrosIngresos.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                         var date = DateTime.Parse(firstSheet.Cells[8, i].Text);
 
-
+                       
                         #region EF_FondosDisponibles
                         if (date > maxDateFondosDisponibles)
                         {
+                            
                             var std = new EF_FondosDisponibles()
                             {
                                 Fecha = DateTime.Parse(firstSheet.Cells[8, i].Text),
-                                Caja = decimal.Parse((firstSheet.Cells[12, i].Value ?? 0).ToString()),
-                                BancoCentral = decimal.Parse((firstSheet.Cells[13, i].Value ?? 0).ToString()),
-                                BancosPais = decimal.Parse((firstSheet.Cells[14, i].Value ?? 0).ToString()),
-                                BancosExtranjeros = decimal.Parse((firstSheet.Cells[15, i].Value ?? 0).ToString()),
-                                Otras = decimal.Parse((firstSheet.Cells[16, i].Value ?? 0).ToString()),
-                                RendimientosCobrar = decimal.Parse((firstSheet.Cells[17, i].Value ?? 0).ToString()),
-                                Subtotal = decimal.Parse((firstSheet.Cells[18, i].Value ?? 0).ToString()),
+                                Caja = decimal.Parse((firstSheet.Cells[fondosInt + 1, i].Value ?? 0).ToString()),
+                                BancoCentral = decimal.Parse((firstSheet.Cells[fondosInt + 2, i].Value ?? 0).ToString()),
+                                BancosPais = decimal.Parse((firstSheet.Cells[fondosInt + 3, i].Value ?? 0).ToString()),
+                                BancosExtranjeros = decimal.Parse((firstSheet.Cells[fondosInt + 4, i].Value ?? 0).ToString()),
+                                Otras = decimal.Parse((firstSheet.Cells[fondosInt + 5, i].Value ?? 0).ToString()),
+                                RendimientosCobrar = decimal.Parse((firstSheet.Cells[fondosInt + 6, i].Value ?? 0).ToString()),
+                                Subtotal = decimal.Parse((firstSheet.Cells[fondosInt + 7, i].Value ?? 0).ToString()),
                             };
                             context.EF_FondosDisponibles.Add(std);
                             context.SaveChanges();
@@ -512,6 +520,25 @@ namespace ImportSuperIntendencia
 
 
             }
+        }
+
+        public static int GetCell(string name, string worksheet)
+        {
+            int cellNumber =0;
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            using (var package = new ExcelPackage(new FileInfo(@"E:\SIB\B-Estados-Financieros.xlsx")))
+            {
+                var firstSheet = package.Workbook.Worksheets["BANCOS MULTIPLES"];
+
+                var query3 = from cell in firstSheet.Cells["a:a"]
+                             where cell.Value?.ToString() == name //"Fondos Disponibles"
+                             select cell;
+
+                cellNumber = int.Parse(Regex.Replace(query3.FirstOrDefault().ToString(), "[^0-9.]", ""));
+            }
+
+            return cellNumber;
         }
     }
 }
