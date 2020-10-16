@@ -37,7 +37,8 @@ namespace ImportSuperIntendencia.Data
         public DbSet<EF_GastosFinancieros> EF_GastosFinancieros { get; set; }
         public DbSet<EF_OtrosIngresosOperacionales> EF_OtrosIngresosOperacionales { get; set; }
         public DbSet<EF_OtrosGastosOperacionales> EF_OtrosGastosOperacionales { get; set; }
-        public DbSet<EF_GastosOperativos> EF_GastosOperativos { get; set; }
+        public DbSet<EF_GastosOperativos> EF_GastosOperativos { get; set; } 
+        public DbSet<EF_OtrosIngresos> EF_OtrosIngresos { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(@"Server=.;Database=SIB;Trusted_Connection=True;");

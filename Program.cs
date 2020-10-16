@@ -57,6 +57,7 @@ namespace ImportSuperIntendencia
                         var maxDateEF_OtrosIngresosOperacionales = context.EF_OtrosIngresosOperacionales.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                         var maxDateEF_OtrosGastosOperacionales = context.EF_OtrosGastosOperacionales.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault(); 
                         var maxDateEF_GastosOperativos = context.EF_GastosOperativos.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
+                        var maxDateEF_OtrosIngresos = context.EF_OtrosIngresos.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                         var date = DateTime.Parse(firstSheet.Cells[8, i].Text);
 
 
@@ -487,6 +488,21 @@ namespace ImportSuperIntendencia
                                 Subtotal = decimal.Parse((firstSheet.Cells[185, i].Value ?? 0).ToString()),
                             };
                             context.EF_GastosOperativos.Add(fd);
+                            context.SaveChanges();
+                        }
+                        #endregion                     
+
+                        #region EF_OtrosIngresos
+                        if (date > maxDateEF_OtrosIngresos)
+                        {
+                            var fd = new EF_OtrosIngresos()
+                            {
+                                Fecha = DateTime.Parse(firstSheet.Cells[8, i].Text),
+                                OtrosIngresos = decimal.Parse((firstSheet.Cells[180, i].Value ?? 0).ToString()),
+                                OtrosGastos = decimal.Parse((firstSheet.Cells[184, i].Value ?? 0).ToString()),
+                                Subtotal = decimal.Parse((firstSheet.Cells[185, i].Value ?? 0).ToString()),
+                            };
+                            context.EF_OtrosIngresos.Add(fd);
                             context.SaveChanges();
                         }
                         #endregion

@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20201015212521_AddEF_OtrosIngresos.cs" />
+    <Compile Remove="Migrations\20201015212521_AddEF_OtrosIngresos.Designer.cs" />
     <Compile Remove="Models\EF_ObligacionesPactosRecompensaTitulos.cs" />
   </ItemGroup>
 
