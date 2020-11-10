@@ -6,6 +6,7 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 
 namespace ImportSuperIntendencia
@@ -14,15 +15,94 @@ namespace ImportSuperIntendencia
     {
         static void Main(string[] args)
         {
+
+            EstadosFinancieros();
+            CarteraCreditos();
+
+        }
+
+        public static void CarteraCreditos()
+        {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-            using (var package = new ExcelPackage(new FileInfo(@"https://www.sib.gob.do/sites/default/files/nuevosdocumentos/estadisticas/seriestiempo/B-Estados-Financieros_1.xlsx")))
+            var client = new WebClient();
+
+            String url = @"https://sib.gob.do/sites/default/files/nuevosdocumentos/estadisticas/seriestiempo/D-Cartera-de-Creditos_0.xlsx";
+            var fullPath = Path.GetFullPath(@"c:\apps\cc.xlsx");
+            client.DownloadFile(url, fullPath);
+            using (var package = new ExcelPackage(new FileInfo(fullPath)))
+            {
+                var firstSheet = package.Workbook.Worksheets["Moneda, cartera, deudor y T.E."];
+
+
+
+                int MN = GetCell("Moneda Nacional", fullPath, "Moneda, cartera, deudor y T.E.");
+                //int cFecha = GetCell("Estado de Situación", ""); 
+
+
+                int totalRows = firstSheet.Dimension.End.Row;
+                int totalCols = firstSheet.Dimension.End.Column;
+                var range = firstSheet.Cells[1, 1, 1, totalCols];
+
+
+                for (int i = 2; i <= totalCols; i++)
+                {
+                    Console.WriteLine(firstSheet.Cells[MN - 1, i].Text);
+
+                    using (var context = new DataContext())
+                    {
+                        var maxDateCC_CarteraCreditoBancosMultiples = context.CC_CarteraCreditoBancosMultiples.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
+                        var date = getDateEnglish(firstSheet.Cells[MN - 1, i].Text);
+                        //#endregion
+
+                        
+                        if (date > maxDateCC_CarteraCreditoBancosMultiples)
+                        {
+                            var std = new CC_CarteraCreditoBancosMultiples()
+                            {
+                                //MN = 11
+                                Fecha = date,
+                                CreditosComercialesMayoresDeudoresMN = decimal.Parse((firstSheet.Cells[MN + 3, i].Value ?? 0).ToString()),
+                                CreditosComercialesMedianosDeudoresMN = decimal.Parse((firstSheet.Cells[MN + 9, i].Value ?? 0).ToString()),
+                                CreditosComercialesMenoresDeudoresMN = decimal.Parse((firstSheet.Cells[MN + 15, i].Value ?? 0).ToString()),
+                                CreditosComercialesMicrocreditoMN = decimal.Parse((firstSheet.Cells[MN + 21, i].Value ?? 0).ToString()),
+                                CreditosAtravesTarjetasCreditosPersonalesMN = decimal.Parse((firstSheet.Cells[MN + 27, i].Value ?? 0).ToString()),
+                                CreditosConsumoMN = decimal.Parse((firstSheet.Cells[MN + 33, i].Value ?? 0).ToString()),
+                                CreditosHipotecariosMN = decimal.Parse((firstSheet.Cells[MN + 39, i].Value ?? 0).ToString()),
+                                CreditosComercialesMayoresDeudoresEXT = decimal.Parse((firstSheet.Cells[MN + 47, i].Value ?? 0).ToString()),
+                                CreditosComercialesMedianosDeudoresEXT = decimal.Parse((firstSheet.Cells[MN + 52, i].Value ?? 0).ToString()),
+                                CreditosComercialesMenoresDeudoresEXT = decimal.Parse((firstSheet.Cells[MN + 56, i].Value ?? 0).ToString()),
+                                CreditosComercialesMicrocreditoEXT = decimal.Parse((firstSheet.Cells[MN + 61, i].Value ?? 0).ToString()),
+                                CreditosAtravesTarjetasCreditosPersonalesEXT = decimal.Parse((firstSheet.Cells[MN + 65, i].Value ?? 0).ToString()),
+                                CreditosConsumoEXT = decimal.Parse((firstSheet.Cells[MN + 69, i].Value ?? 0).ToString()),
+                                CreditosHipotecariosEXT = decimal.Parse((firstSheet.Cells[MN + 72, i].Value ?? 0).ToString()),
+                                GrandTotal = decimal.Parse((firstSheet.Cells[MN + 73, i].Value ?? 0).ToString()),
+                            };
+                            context.CC_CarteraCreditoBancosMultiples.Add(std);
+                            context.SaveChanges();
+                        }
+                    }
+                }
+            }
+        }
+
+        public static void EstadosFinancieros()
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            var client = new WebClient();
+
+            String url = "https://www.sib.gob.do/sites/default/files/nuevosdocumentos/estadisticas/seriestiempo/B-Estados-Financieros_1.xlsx";
+            var fullPath = Path.GetFullPath(@"c:\apps\1.xlsx");
+            client.DownloadFile(url, fullPath);
+
+            using (var package = new ExcelPackage(new FileInfo(fullPath)))
             {
                 var firstSheet = package.Workbook.Worksheets["Cuadro 2"];
 
 
 
-               int Activos = GetCell("ACTIVOS", "") -1;
+                int Activos = GetCell("ACTIVOS", fullPath, "Cuadro 2");
                 //int cFecha = GetCell("Estado de Situación", ""); 
 
 
@@ -102,14 +182,14 @@ namespace ImportSuperIntendencia
                         //var maxDateEF_OtrosGastosOperacionales = context.EF_OtrosGastosOperacionales.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                         //var maxDateEF_GastosOperativos = context.EF_GastosOperativos.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                         //var maxDateEF_OtrosIngresos = context.EF_OtrosIngresos.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
-                        var date = DateTime.Parse(firstSheet.Cells[Activos -2, i].Text);
+                        var date = DateTime.Parse(firstSheet.Cells[Activos - 2, i].Text);
                         //#endregion
 
                         #region EF_FondosDisponibles
                         if (date > maxDateFondosDisponibles)
                         {
 
-      
+
                             var std = new EF_FondosDisponibles()
                             {
                                 Fecha = date,
@@ -187,7 +267,7 @@ namespace ImportSuperIntendencia
                             {
                                 Fecha = date,
                                 CuentasCobrar = decimal.Parse((firstSheet.Cells[Activos + 37, i].Value ?? 0).ToString()),
-                                RendimientosCobrar = decimal.Parse((firstSheet.Cells[Activos +38, i].Value ?? 0).ToString()),
+                                RendimientosCobrar = decimal.Parse((firstSheet.Cells[Activos + 38, i].Value ?? 0).ToString()),
                                 Subtotal = decimal.Parse((firstSheet.Cells[Activos + 39, i].Value ?? 0).ToString()),
                             };
                             context.EF_CuentasCobrar.Add(fd);
@@ -200,7 +280,7 @@ namespace ImportSuperIntendencia
                         {
                             var fd = new EF_InversionesAcciones()
                             {
-                                Fecha =  date,
+                                Fecha = date,
                                 InversionesAcciones = decimal.Parse((firstSheet.Cells[Activos + 47, i].Value ?? 0).ToString()),
                                 ProvisionInversionesAcciones = decimal.Parse((firstSheet.Cells[Activos + 48, i].Value ?? 0).ToString()),
                                 Subtotal = decimal.Parse((firstSheet.Cells[Activos + 49, i].Value ?? 0).ToString()),
@@ -353,12 +433,12 @@ namespace ImportSuperIntendencia
                             var fd = new EF_FondosTomadosPrestamos()
                             {
                                 Fecha = date,
-                                BancoCentral = decimal.Parse((firstSheet.Cells[Activos + 90, i].Value ?? 0).ToString()),
-                                InstitucionesPais = decimal.Parse((firstSheet.Cells[Activos + 91, i].Value ?? 0).ToString()),
-                                InstitucionesExterior = decimal.Parse((firstSheet.Cells[Activos + 92, i].Value ?? 0).ToString()),
-                                Otros = decimal.Parse((firstSheet.Cells[Activos + 93, i].Value ?? 0).ToString()),
-                                InteresesPagar = decimal.Parse((firstSheet.Cells[Activos + 94, i].Value ?? 0).ToString()),
-                                Subtotal = decimal.Parse((firstSheet.Cells[Activos + 95, i].Value ?? 0).ToString()),
+                                BancoCentral = decimal.Parse((firstSheet.Cells[Activos + 91, i].Value ?? 0).ToString()),
+                                InstitucionesPais = decimal.Parse((firstSheet.Cells[Activos + 92, i].Value ?? 0).ToString()),
+                                InstitucionesExterior = decimal.Parse((firstSheet.Cells[Activos + 93, i].Value ?? 0).ToString()),
+                                Otros = decimal.Parse((firstSheet.Cells[Activos + 94, i].Value ?? 0).ToString()),
+                                InteresesPagar = decimal.Parse((firstSheet.Cells[Activos + 95, i].Value ?? 0).ToString()),
+                                Subtotal = decimal.Parse((firstSheet.Cells[Activos + 96, i].Value ?? 0).ToString()),
                             };
                             context.EF_FondosTomadosPrestamos.Add(fd);
                             context.SaveChanges();
@@ -560,14 +640,14 @@ namespace ImportSuperIntendencia
             }
         }
 
-        public static int GetCell(string name, string worksheet)
+        public static int GetCell(string name, string worksheet,string sheet)
         {
             int cellNumber =0;
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-            using (var package = new ExcelPackage(new FileInfo(@"E:\SIB\B-Estados-Financieros.xlsx")))
+            using (var package = new ExcelPackage(new FileInfo(worksheet)))
             {
-                var firstSheet = package.Workbook.Worksheets["BANCOS MULTIPLES"];
+                var firstSheet = package.Workbook.Worksheets[sheet];
 
                 var query3 = from cell in firstSheet.Cells["a:a"]
                              where cell.Value?.ToString() == name //"Fondos Disponibles"
@@ -577,6 +657,30 @@ namespace ImportSuperIntendencia
             }
 
             return cellNumber;
+        }
+
+        public static DateTime getDateEnglish(string fecha)
+        {
+            var esCulture = new CultureInfo("es-ES");
+            var monthNames = esCulture.DateTimeFormat.AbbreviatedMonthNames;
+            for (int i = 0; i < monthNames.Length; i++)
+            {
+                monthNames[i] = monthNames[i].TrimEnd('.');
+            }
+            esCulture.DateTimeFormat.AbbreviatedMonthNames = monthNames;
+            monthNames = esCulture.DateTimeFormat.AbbreviatedMonthGenitiveNames;
+            for (int i = 0; i < monthNames.Length; i++)
+            {
+                monthNames[i] = monthNames[i].TrimEnd('.');
+            }
+            esCulture.DateTimeFormat.AbbreviatedMonthGenitiveNames = monthNames;
+
+            var input = fecha;
+            var format = "MMM-yyyy";
+            var dt = DateTime.ParseExact(input, format, esCulture);
+            var result = DateTime.Parse(dt.ToString(format, new CultureInfo("en-US")));
+
+            return result;
         }
     }
 }

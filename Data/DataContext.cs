@@ -39,11 +39,12 @@ namespace ImportSuperIntendencia.Data
         public DbSet<EF_OtrosGastosOperacionales> EF_OtrosGastosOperacionales { get; set; }
         public DbSet<EF_GastosOperativos> EF_GastosOperativos { get; set; } 
         public DbSet<EF_OtrosIngresos> EF_OtrosIngresos { get; set; }
+        public DbSet<CC_CarteraCreditoBancosMultiples> CC_CarteraCreditoBancosMultiples { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 
-            //optionsBuilder.UseSqlServer(@"Server=tcp:abadb01.database.windows.net,1433;Initial Catalog=SIB;Persist Security Info=False;User ID=abamin;Password=TheR@y$RmyT3am;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
-            optionsBuilder.UseSqlServer(@"Server=.;Database=SIB;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer(@"Server=tcp:abadb01.database.windows.net,1433;Initial Catalog=SIB;Persist Security Info=False;User ID=abamin;Password=TheR@y$RmyT3am;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+           // optionsBuilder.UseSqlServer(@"Server=.;Database=SIB;Trusted_Connection=True;");
         }
 
 
