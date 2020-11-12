@@ -40,6 +40,12 @@ namespace ImportSuperIntendencia.Data
         public DbSet<EF_GastosOperativos> EF_GastosOperativos { get; set; } 
         public DbSet<EF_OtrosIngresos> EF_OtrosIngresos { get; set; }
         public DbSet<CC_CarteraCreditoBancosMultiples> CC_CarteraCreditoBancosMultiples { get; set; }
+        public DbSet<IF_Volumen> IF_Volumen { get; set; }
+        public DbSet<IF_Rentabilidad> IF_Rentabilidad { get; set; }
+        public DbSet<IF_Liquidez> IF_Liquidez { get; set; }
+        public DbSet<IF_EstructuraCarteraCreditos> IF_EstructuraCarteraCreditos { get; set; }
+        public DbSet<IF_EstructuraActivos> IF_EstructuraActivos { get; set; } 
+        public DbSet<IF_EstructuraPasivos> IF_EstructuraPasivos { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 

@@ -16,9 +16,154 @@ namespace ImportSuperIntendencia
         static void Main(string[] args)
         {
 
-            EstadosFinancieros();
-            CarteraCreditos();
+            //EstadosFinancieros();
+            //CarteraCreditos();
+            IndicadoresFinancieros();
 
+
+        }
+
+        public static void IndicadoresFinancieros()
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            var client = new WebClient();
+
+            String url = @"https://www.sib.gob.do/sites/default/files/nuevosdocumentos/estadisticas/seriestiempo/C-Indicadores-Financieros.xlsx";
+            var fullPath = Path.GetFullPath(@"c:\apps\if.xlsx");
+            client.DownloadFile(url, fullPath);
+            using (var package = new ExcelPackage(new FileInfo(fullPath)))
+            {
+                var firstSheet = package.Workbook.Worksheets["Cuadro 2"];
+
+                int MN = GetCell("VOLUMEN", fullPath, "Cuadro 2");
+
+                int totalRows = firstSheet.Dimension.End.Row;
+                int totalCols = firstSheet.Dimension.End.Column;
+                var range = firstSheet.Cells[1, 1, 1, totalCols];
+
+
+                for (int i = 2; i <= totalCols; i++)
+                {
+                    Console.WriteLine(firstSheet.Cells[MN - 1, i].Text);
+                    if (firstSheet.Cells[MN - 1, i].Text != "")
+                    {
+                        using (var context = new DataContext())
+                        {
+                            var maxDateIF_Volumen = context.IF_Volumen.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
+                            var maxDateIF_Rentabilidad = context.IF_Rentabilidad.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
+                            var maxDateIF_Liquidez = context.IF_Liquidez.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault(); 
+                            var maxDateIF_EstructuraCarteraCreditos = context.IF_EstructuraCarteraCreditos.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
+                            var maxDateIF_EstructuraActivos = context.IF_EstructuraActivos.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
+                            var maxDateIF_EstructuraPasivos = context.IF_EstructuraPasivos.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
+                            var date = DateTime.Parse(firstSheet.Cells[MN - 1, i].Text);
+
+
+
+                            if (date > maxDateIF_Volumen)
+                            {
+                                var std = new IF_Volumen()
+                                {
+                                    //MN = 8
+                                    Fecha = date,
+                                    TotalActivosNetos = decimal.Parse((firstSheet.Cells[MN + 1, i].Value ?? 0).ToString()),
+                                    TotalPasivos = decimal.Parse((firstSheet.Cells[MN + 2, i].Value ?? 0).ToString()),
+                                    TotalPatrimonioNeto = decimal.Parse((firstSheet.Cells[MN + 3, i].Value ?? 0).ToString())
+                                };
+                                context.IF_Volumen.Add(std);
+                                context.SaveChanges();
+                            }
+
+                            if (date > maxDateIF_Rentabilidad)
+                            {
+                                var std = new IF_Rentabilidad()
+                                {
+                                    //MN = 8
+                                    Fecha = date,
+                                    ROA = decimal.Parse((firstSheet.Cells[MN + 5, i].Value ?? 0).ToString()),
+                                    REA = decimal.Parse((firstSheet.Cells[MN + 6, i].Value ?? 0).ToString()),
+                                    IngresosFinancieros = decimal.Parse((firstSheet.Cells[MN + 7, i].Value ?? 0).ToString()),
+                                    MargenFinancieroBruto = decimal.Parse((firstSheet.Cells[MN + 8, i].Value ?? 0).ToString()),
+                                    ActivosProductivos = decimal.Parse((firstSheet.Cells[MN + 9, i].Value ?? 0).ToString()),
+                                    MargenFinancieroBrutoMIN = decimal.Parse((firstSheet.Cells[MN + 10, i].Value ?? 0).ToString())
+
+                                };
+                                context.IF_Rentabilidad.Add(std);
+                                context.SaveChanges();
+                            }
+
+                            if (date > maxDateIF_Liquidez)
+                            {
+                                var std = new IF_Liquidez()
+                                {
+                                    //MN = 8
+                                    Fecha = date,
+                                    TotalCaptacionesObligConCosto = decimal.Parse((firstSheet.Cells[MN + 12, i].Value ?? 0).ToString()),
+                                    TotalCaptaciones = decimal.Parse((firstSheet.Cells[MN + 13, i].Value ?? 0).ToString()),
+                                    TotalDepositos= decimal.Parse((firstSheet.Cells[MN + 14, i].Value ?? 0).ToString()),
+                                    TotalActivos = decimal.Parse((firstSheet.Cells[MN + 15, i].Value ?? 0).ToString()),
+                                    ActivosProductivos = decimal.Parse((firstSheet.Cells[MN + 16, i].Value ?? 0).ToString())
+                                };
+                                context.IF_Liquidez.Add(std);
+                                context.SaveChanges();
+                            }
+
+                            if (date > maxDateIF_EstructuraCarteraCreditos)
+                            {
+                                var std = new IF_EstructuraCarteraCreditos()
+                                {
+                                    //MN = 8
+                                    Fecha = date,
+                                    CarteraCreditosVencida = decimal.Parse((firstSheet.Cells[MN + 18, i].Value ?? 0).ToString()),
+                                    CarteraCreditosVigente = decimal.Parse((firstSheet.Cells[MN + 19, i].Value ?? 0).ToString()),
+                                    TotalCarteraVencida = decimal.Parse((firstSheet.Cells[MN + 20, i].Value ?? 0).ToString()),
+                                    TotalCarteraCreditoBruta = decimal.Parse((firstSheet.Cells[MN + 21, i].Value ?? 0).ToString()),
+                                };
+                                context.IF_EstructuraCarteraCreditos.Add(std);
+                                context.SaveChanges();
+                            }
+
+                            if (date > maxDateIF_EstructuraActivos)
+                            {
+                                var std = new IF_EstructuraActivos()
+                                {
+                                    //MN = 8
+                                    Fecha = date,
+                                    DisponibilidadNeta = decimal.Parse((firstSheet.Cells[MN + 23, i].Value ?? 0).ToString()),
+                                    DisponibilidadExterior = decimal.Parse((firstSheet.Cells[MN + 24, i].Value ?? 0).ToString()),
+                                    TotalCarteraCreditosNeta = decimal.Parse((firstSheet.Cells[MN + 25, i].Value ?? 0).ToString()),
+                                    TotalInversionesNeta = decimal.Parse((firstSheet.Cells[MN + 26, i].Value ?? 0).ToString()),
+                                    ActivosFijosNetos = decimal.Parse((firstSheet.Cells[MN + 27, i].Value ?? 0).ToString()),
+                                    BienesRecibidosRecuperacionCreditosNetos = decimal.Parse((firstSheet.Cells[MN + 28, i].Value ?? 0).ToString()),
+                                    OtrosActivosNetos = decimal.Parse((firstSheet.Cells[MN + 29, i].Value ?? 0).ToString()),
+                                };
+                                context.IF_EstructuraActivos.Add(std);
+                                context.SaveChanges();
+                            }      
+                            
+                            if (date > maxDateIF_EstructuraPasivos)
+                            {
+                                var std = new IF_EstructuraPasivos()
+                                {
+                                    //MN = 8
+                                    Fecha = date,
+                                    TotalPasivos = decimal.Parse((firstSheet.Cells[MN + 31, i].Value ?? 0).ToString()),
+                                    CarteraCreditosBruta = decimal.Parse((firstSheet.Cells[MN + 32, i].Value ?? 0).ToString()),
+                                    TotalCaptaciones = decimal.Parse((firstSheet.Cells[MN + 33, i].Value ?? 0).ToString()),
+                                    ValoresCirculacionPublico = decimal.Parse((firstSheet.Cells[MN + 34, i].Value ?? 0).ToString()),
+                                    TotalDepositos = decimal.Parse((firstSheet.Cells[MN + 35, i].Value ?? 0).ToString()),
+                                    DepositosALaVista = decimal.Parse((firstSheet.Cells[MN + 36, i].Value ?? 0).ToString()),
+                                    DepositosAhorro = decimal.Parse((firstSheet.Cells[MN + 37, i].Value ?? 0).ToString()),
+                                    DepositosPlazo = decimal.Parse((firstSheet.Cells[MN + 38, i].Value ?? 0).ToString()),
+                                   
+                                };
+                                context.IF_EstructuraPasivos.Add(std);
+                                context.SaveChanges();
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         public static void CarteraCreditos()
@@ -55,7 +200,7 @@ namespace ImportSuperIntendencia
                         var date = getDateEnglish(firstSheet.Cells[MN - 1, i].Text);
                         //#endregion
 
-                        
+
                         if (date > maxDateCC_CarteraCreditoBancosMultiples)
                         {
                             var std = new CC_CarteraCreditoBancosMultiples()
@@ -640,9 +785,9 @@ namespace ImportSuperIntendencia
             }
         }
 
-        public static int GetCell(string name, string worksheet,string sheet)
+        public static int GetCell(string name, string worksheet, string sheet)
         {
-            int cellNumber =0;
+            int cellNumber = 0;
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
             using (var package = new ExcelPackage(new FileInfo(worksheet)))

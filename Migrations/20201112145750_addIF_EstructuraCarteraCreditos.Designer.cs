@@ -4,14 +4,16 @@ using ImportSuperIntendencia.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ImportSuperIntendencia.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20201112145750_addIF_EstructuraCarteraCreditos")]
+    partial class addIF_EstructuraCarteraCreditos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -700,37 +702,6 @@ namespace ImportSuperIntendencia.Migrations
                     b.ToTable("EF_ValoresCirculacion");
                 });
 
-            modelBuilder.Entity("ImportSuperIntendencia.Models.IF_EstructuraActivos", b =>
-                {
-                    b.Property<DateTime>("Fecha")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("ActivosFijosNetos")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("BienesRecibidosRecuperacionCreditosNetos")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("DisponibilidadExterior")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("DisponibilidadNeta")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("OtrosActivosNetos")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("TotalCarteraCreditosNeta")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("TotalInversionesNeta")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Fecha");
-
-                    b.ToTable("IF_EstructuraActivos");
-                });
-
             modelBuilder.Entity("ImportSuperIntendencia.Models.IF_EstructuraCarteraCreditos", b =>
                 {
                     b.Property<DateTime>("Fecha")
@@ -751,40 +722,6 @@ namespace ImportSuperIntendencia.Migrations
                     b.HasKey("Fecha");
 
                     b.ToTable("IF_EstructuraCarteraCreditos");
-                });
-
-            modelBuilder.Entity("ImportSuperIntendencia.Models.IF_EstructuraPasivos", b =>
-                {
-                    b.Property<DateTime>("Fecha")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("CarteraCreditosBruta")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("DepositosALaVista")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("DepositosAhorro")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("DepositosPlazo")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("TotalCaptaciones")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("TotalDepositos")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("TotalPasivos")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("ValoresCirculacionPublico")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Fecha");
-
-                    b.ToTable("IF_EstructuraPasivos");
                 });
 
             modelBuilder.Entity("ImportSuperIntendencia.Models.IF_Liquidez", b =>
