@@ -4,14 +4,16 @@ using ImportSuperIntendencia.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ImportSuperIntendencia.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20201112155630_addIF_Capital")]
+    partial class addIF_Capital
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -796,25 +798,6 @@ namespace ImportSuperIntendencia.Migrations
                     b.ToTable("IF_EstructuraCarteraCreditos");
                 });
 
-            modelBuilder.Entity("ImportSuperIntendencia.Models.IF_EstructuraGastosGeneralesAdministrativos", b =>
-                {
-                    b.Property<DateTime>("Fecha")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("OtrosGastosGenerales")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("SueldosCompensacionesPersonal")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("TotalGastosGeneralesAdministrativos")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Fecha");
-
-                    b.ToTable("IF_EstructuraGastosGeneralesAdministrativos");
-                });
-
             modelBuilder.Entity("ImportSuperIntendencia.Models.IF_EstructuraPasivos", b =>
                 {
                     b.Property<DateTime>("Fecha")
@@ -847,55 +830,6 @@ namespace ImportSuperIntendencia.Migrations
                     b.HasKey("Fecha");
 
                     b.ToTable("IF_EstructuraPasivos");
-                });
-
-            modelBuilder.Entity("ImportSuperIntendencia.Models.IF_Gestion", b =>
-                {
-                    b.Property<DateTime>("Fecha")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("GastoPersonalGastosExplotacion")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("GastosExplotacionActivosProductivos")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("GastosExplotacionMargenOperacionalBruto")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("GastosFinancierosActivosFinancierosCF")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("GastosFinancierosActivosProductivosCE")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("GastosFinancierosCaptacionesCaptacionesCosto")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("GastosFinancierosCaptacionesCostosObligacionesCosto")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("GastosFinancierosIngresosFinancieros")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("GastosFinancierosTotalCaptacionesObligCosto")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("GastosOperacionalesIngresosOperacionalesBrutos")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("TotalGastosGeneralesAdministTotalCaptacionesObligCosto")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("TotalGastosGeneralesAdministrativosActivosTotales")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("TotalGastosGeneralesAdministrativosTotalCaptaciones")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Fecha");
-
-                    b.ToTable("IF_Gestion");
                 });
 
             modelBuilder.Entity("ImportSuperIntendencia.Models.IF_Liquidez", b =>
@@ -968,31 +902,6 @@ namespace ImportSuperIntendencia.Migrations
                     b.HasKey("Fecha");
 
                     b.ToTable("IF_Volumen");
-                });
-
-            modelBuilder.Entity("ImportSuperIntendencia.Models.SC_SolvenciaComponentes", b =>
-                {
-                    b.Property<DateTime>("Fecha")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("ActivosContingentesPonderadosRiesgoCreditícioDeduccionesPatrimonio")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("ActivosContingentesPonderadosRiesgosCreditíciosMercado")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("CapitalRequeridoRiesgoMercado")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("IndiceSolvencia")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("PatrimonioTecnicoAjustado")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Fecha");
-
-                    b.ToTable("SC_SolvenciaComponentes");
                 });
 #pragma warning restore 612, 618
         }

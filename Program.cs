@@ -15,12 +15,10 @@ namespace ImportSuperIntendencia
     {
         static void Main(string[] args)
         {
-
-            //EstadosFinancieros();
-            //CarteraCreditos();
+            EstadosFinancieros();
+            CarteraCreditos();
             IndicadoresFinancieros();
-
-
+            SolvenciaComponentes();
         }
 
         public static void IndicadoresFinancieros()
@@ -55,7 +53,10 @@ namespace ImportSuperIntendencia
                             var maxDateIF_Liquidez = context.IF_Liquidez.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault(); 
                             var maxDateIF_EstructuraCarteraCreditos = context.IF_EstructuraCarteraCreditos.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                             var maxDateIF_EstructuraActivos = context.IF_EstructuraActivos.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
-                            var maxDateIF_EstructuraPasivos = context.IF_EstructuraPasivos.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
+                            var maxDateIF_EstructuraPasivos = context.IF_EstructuraPasivos.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault(); 
+                            var maxDateIF_Capital = context.IF_Capital.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
+                            var maxDateIF_Gestion = context.IF_Gestion.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
+                            var maxDateIF_EstructuraGastosGeneralesAdministrativos = context.IF_EstructuraGastosGeneralesAdministrativos.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                             var date = DateTime.Parse(firstSheet.Cells[MN - 1, i].Text);
 
 
@@ -159,7 +160,130 @@ namespace ImportSuperIntendencia
                                 };
                                 context.IF_EstructuraPasivos.Add(std);
                                 context.SaveChanges();
+                            }       
+
+                            if (date > maxDateIF_Capital)
+                            {
+                                decimal nd;
+                                if (firstSheet.Cells[MN + 40, i].Value == null)
+                                {
+                                    nd = 0;
+                                }
+                                else if (firstSheet.Cells[MN + 40, i].Value.ToString() == "ND")
+                                {
+                                    nd = 0;
+                                }
+                                else
+                                {
+                                    nd = decimal.Parse((firstSheet.Cells[MN + 40, i].Value ?? 0).ToString());
+                                }
+
+                                var std = new IF_Capital()
+                                {
+                                    //MN = 8
+                                    Fecha = date,
+                                    IndiceSolvencia = nd,
+                                    Endeudamiento = decimal.Parse((firstSheet.Cells[MN + 41, i].Value ?? 0).ToString()),
+                                    ActivosNeto = decimal.Parse((firstSheet.Cells[MN + 42, i].Value ?? 0).ToString()),
+                                    CarteraCreditoVencida = decimal.Parse((firstSheet.Cells[MN + 43, i].Value ?? 0).ToString()),
+                                    CarteraCreditoBruta = decimal.Parse((firstSheet.Cells[MN + 44, i].Value ?? 0).ToString()),
+                                    ActivosImproductivos = decimal.Parse((firstSheet.Cells[MN + 45, i].Value ?? 0).ToString()),
+                                    OtrosActivos = decimal.Parse((firstSheet.Cells[MN + 46, i].Value ?? 0).ToString()),
+                                    PatrimonioNetoActivosNetos = decimal.Parse((firstSheet.Cells[MN + 47, i].Value ?? 0).ToString()),
+                                    PatrimonioNetoTotalPasivos = decimal.Parse((firstSheet.Cells[MN + 48, i].Value ?? 0).ToString()),
+                                    PatrimonioNetoTotalCaptaciones = decimal.Parse((firstSheet.Cells[MN + 49, i].Value ?? 0).ToString()),
+                                    PatrimonioNetoActivosNetosExcluyendoDisponibilidades = decimal.Parse((firstSheet.Cells[MN + 50, i].Value ?? 0).ToString()),
+                                };
+                                context.IF_Capital.Add(std);
+                                context.SaveChanges();
                             }
+
+                            if (date > maxDateIF_Gestion)
+                            {
+                                var std = new IF_Gestion()
+                                {
+                                    //MN = 8
+                                    Fecha = date,
+                                    TotalGastosGeneralesAdministrativosTotalCaptaciones = decimal.Parse((firstSheet.Cells[MN + 52, i].Value ?? 0).ToString()),
+                                    GastosExplotacionMargenOperacionalBruto = decimal.Parse((firstSheet.Cells[MN + 53, i].Value ?? 0).ToString()),
+                                    GastosFinancierosCaptacionesCaptacionesCosto = decimal.Parse((firstSheet.Cells[MN + 54, i].Value ?? 0).ToString()),
+                                    GastosFinancierosTotalCaptacionesObligCosto = decimal.Parse((firstSheet.Cells[MN + 55, i].Value ?? 0).ToString()),
+                                    GastosFinancierosCaptacionesCostosObligacionesCosto = decimal.Parse((firstSheet.Cells[MN + 56, i].Value ?? 0).ToString()),
+                                    TotalGastosGeneralesAdministTotalCaptacionesObligCosto = decimal.Parse((firstSheet.Cells[MN + 57, i].Value ?? 0).ToString()),
+                                    GastosFinancierosActivosProductivosCE = decimal.Parse((firstSheet.Cells[MN + 58, i].Value ?? 0).ToString()),
+                                    GastosFinancierosActivosFinancierosCF = decimal.Parse((firstSheet.Cells[MN + 59, i].Value ?? 0).ToString()),
+                                    GastosFinancierosIngresosFinancieros = decimal.Parse((firstSheet.Cells[MN + 60, i].Value ?? 0).ToString()),
+                                    GastosOperacionalesIngresosOperacionalesBrutos = decimal.Parse((firstSheet.Cells[MN + 61, i].Value ?? 0).ToString()),
+                                    TotalGastosGeneralesAdministrativosActivosTotales = decimal.Parse((firstSheet.Cells[MN + 62, i].Value ?? 0).ToString()),
+                                    GastosExplotacionActivosProductivos = decimal.Parse((firstSheet.Cells[MN + 63, i].Value ?? 0).ToString()),
+                                    GastoPersonalGastosExplotacion = decimal.Parse((firstSheet.Cells[MN + 64, i].Value ?? 0).ToString()),
+                                    
+                                };
+                                context.IF_Gestion.Add(std);
+                                context.SaveChanges();
+                            }
+
+                            if (date > maxDateIF_EstructuraGastosGeneralesAdministrativos)
+                            {
+                                var std = new IF_EstructuraGastosGeneralesAdministrativos()
+                                {
+                                    //MN = 8
+                                    Fecha = date,
+                                    SueldosCompensacionesPersonal = decimal.Parse((firstSheet.Cells[MN + 66, i].Value ?? 0).ToString()),
+                                    OtrosGastosGenerales = decimal.Parse((firstSheet.Cells[MN + 67, i].Value ?? 0).ToString()),
+                                    TotalGastosGeneralesAdministrativos = decimal.Parse((firstSheet.Cells[MN + 68, i].Value ?? 0).ToString())                                                                    };
+                                context.IF_EstructuraGastosGeneralesAdministrativos.Add(std);
+                                context.SaveChanges();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public static void SolvenciaComponentes()
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            var client = new WebClient();
+
+            String url = @"https://sib.gob.do/sites/default/files/nuevosdocumentos/estadisticas/seriestiempo/E-Solvencia-y-sus-Componentes_0.xlsx";
+            var fullPath = Path.GetFullPath(@"c:\apps\sc.xlsx");
+            client.DownloadFile(url, fullPath);
+            using (var package = new ExcelPackage(new FileInfo(fullPath)))
+            {
+                var firstSheet = package.Workbook.Worksheets["Cuadro 1"];
+                int MN = GetCell("Bancos Múltiples", fullPath, "Cuadro 1");
+                int totalRows = firstSheet.Dimension.End.Row;
+                int totalCols = firstSheet.Dimension.End.Column;
+                var range = firstSheet.Cells[1, 1, 1, totalCols];
+
+
+                for (int i = 2; i <= totalCols; i++)
+                {
+                    Console.WriteLine(firstSheet.Cells[MN - 1, i].Text);
+
+                    using (var context = new DataContext())
+                    {
+                        var maxDateSC_SolvenciaComponentes = context.SC_SolvenciaComponentes.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
+                        var date = DateTime.Parse(firstSheet.Cells[MN - 8, i].Text);
+                        //#endregion
+
+
+                        if (date > maxDateSC_SolvenciaComponentes)
+                        {
+                            var std = new SC_SolvenciaComponentes()
+                            {
+                                //MN = 11
+                                Fecha = date,
+                                PatrimonioTecnicoAjustado = decimal.Parse((firstSheet.Cells[MN + 1, i].Value ?? 0).ToString()),
+                                ActivosContingentesPonderadosRiesgoCreditícioDeduccionesPatrimonio = decimal.Parse((firstSheet.Cells[MN + 2, i].Value ?? 0).ToString()),
+                                CapitalRequeridoRiesgoMercado = decimal.Parse((firstSheet.Cells[MN + 3, i].Value ?? 0).ToString()),
+                                ActivosContingentesPonderadosRiesgosCreditíciosMercado = decimal.Parse((firstSheet.Cells[MN + 4, i].Value ?? 0).ToString()),
+                                IndiceSolvencia = decimal.Parse((firstSheet.Cells[MN + 5, i].Value ?? 0).ToString()),                      
+                            };
+                            context.SC_SolvenciaComponentes.Add(std);
+                            context.SaveChanges();
                         }
                     }
                 }
