@@ -9,7 +9,6 @@ namespace ImportSuperIntendencia.Data
 {
     class DataContext : DbContext
     {
-
         public DbSet<EF_FondosDisponibles> EF_FondosDisponibles { get; set; }
         public DbSet<EF_FondosInterbancariosActivos> EF_FondosInterbancariosActivos { get; set; }
         public DbSet<EF_Inversiones> EF_Inversiones { get; set; }
@@ -49,12 +48,16 @@ namespace ImportSuperIntendencia.Data
         public DbSet<IF_Capital> IF_Capital { get; set; }
         public DbSet<IF_Gestion> IF_Gestion { get; set; } 
         public DbSet<IF_EstructuraGastosGeneralesAdministrativos> IF_EstructuraGastosGeneralesAdministrativos { get; set; }
-        public DbSet<SC_SolvenciaComponentes> SC_SolvenciaComponentes { get; set; }
+        public DbSet<SC_SolvenciaComponentes> SC_SolvenciaComponentes { get; set; }        
+        public DbSet<EF_MargenFinancieroNeto> EF_MargenFinancieroNeto { get; set; }
+        public DbSet<EF_ResultadoOperacional> EF_ResultadoOperacional { get; set; }
+        public DbSet<EF_MargenFinancieroBruto> EF_MargenFinancieroBruto { get; set; } 
+        public DbSet<EF_ResultadoAntesImpuestos> EF_ResultadoAntesImpuestos { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 
-            //optionsBuilder.UseSqlServer(@"Server=tcp:abadb01.database.windows.net,1433;Initial Catalog=SIB;Persist Security Info=False;User ID=abamin;Password=TheR@y$RmyT3am;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
-            optionsBuilder.UseSqlServer(@"Server=.;Database=SIB;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer(@"Server=tcp:abadb01.database.windows.net,1433;Initial Catalog=SIB;Persist Security Info=False;User ID=abamin;Password=TheR@y$RmyT3am;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+           // optionsBuilder.UseSqlServer(@"Server=.;Database=SIB;Trusted_Connection=True;");
         }
 
 

@@ -4,14 +4,16 @@ using ImportSuperIntendencia.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ImportSuperIntendencia.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20201214203042_addEF_MargenFinancieroNet")]
+    partial class addEF_MargenFinancieroNet
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -413,32 +415,12 @@ namespace ImportSuperIntendencia.Migrations
                     b.ToTable("EF_InversionesAcciones");
                 });
 
-            modelBuilder.Entity("ImportSuperIntendencia.Models.EF_MargenFinancieroBruto", b =>
+            modelBuilder.Entity("ImportSuperIntendencia.Models.EF_MargenFinancieroNet", b =>
                 {
-                    b.Property<DateTime>("Fecha")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("MargenFinancieroBruto")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("ProvisionInversiones")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("ProvisionesCarteraCreditos")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Subtotal")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Fecha");
-
-                    b.ToTable("EF_MargenFinancieroBruto");
-                });
-
-            modelBuilder.Entity("ImportSuperIntendencia.Models.EF_MargenFinancieroNeto", b =>
-                {
-                    b.Property<DateTime>("Fecha")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<decimal>("IngresosPorDiferenciaCambio")
                         .HasColumnType("decimal(18,2)");
@@ -446,9 +428,9 @@ namespace ImportSuperIntendencia.Migrations
                     b.Property<decimal>("MargenFinacieroNeto")
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("Fecha");
+                    b.HasKey("Id");
 
-                    b.ToTable("EF_MargenFinancieroNeto");
+                    b.ToTable("EF_MargenFinancieroNet");
                 });
 
             modelBuilder.Entity("ImportSuperIntendencia.Models.EF_ObligacionesPublico", b =>
@@ -666,50 +648,6 @@ namespace ImportSuperIntendencia.Migrations
                     b.HasKey("Fecha");
 
                     b.ToTable("EF_PropiedadMueblesEquipos");
-                });
-
-            modelBuilder.Entity("ImportSuperIntendencia.Models.EF_ResultadoAntesImpuestos", b =>
-                {
-                    b.Property<DateTime>("Fecha")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("ImpuestosSobreLaRenta")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("ResultadoAntesImpuestos")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("ResultadoEjercicio")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Fecha");
-
-                    b.ToTable("EF_ResultadoAntesImpuestos");
-                });
-
-            modelBuilder.Entity("ImportSuperIntendencia.Models.EF_ResultadoOperacional", b =>
-                {
-                    b.Property<DateTime>("Fecha")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("OtrosGastos")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("OtrosIngresos")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("OtrosIngresosGastos")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("ResultadoOperacional")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Subtotal")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Fecha");
-
-                    b.ToTable("EF_ResultadoOperacional");
                 });
 
             modelBuilder.Entity("ImportSuperIntendencia.Models.EF_TotalActivos", b =>

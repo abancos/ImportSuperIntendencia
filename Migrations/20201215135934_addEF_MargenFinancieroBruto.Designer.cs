@@ -4,14 +4,16 @@ using ImportSuperIntendencia.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ImportSuperIntendencia.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20201215135934_addEF_MargenFinancieroBruto")]
+    partial class addEF_MargenFinancieroBruto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -666,25 +668,6 @@ namespace ImportSuperIntendencia.Migrations
                     b.HasKey("Fecha");
 
                     b.ToTable("EF_PropiedadMueblesEquipos");
-                });
-
-            modelBuilder.Entity("ImportSuperIntendencia.Models.EF_ResultadoAntesImpuestos", b =>
-                {
-                    b.Property<DateTime>("Fecha")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("ImpuestosSobreLaRenta")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("ResultadoAntesImpuestos")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("ResultadoEjercicio")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Fecha");
-
-                    b.ToTable("EF_ResultadoAntesImpuestos");
                 });
 
             modelBuilder.Entity("ImportSuperIntendencia.Models.EF_ResultadoOperacional", b =>

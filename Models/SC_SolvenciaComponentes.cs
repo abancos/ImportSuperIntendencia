@@ -9,11 +9,11 @@ namespace ImportSuperIntendencia.Models
     {
         [Key]
         public DateTime Fecha { get; set; }
-        public decimal PatrimonioTecnicoAjustado { get; set; }
-        public decimal ActivosContingentesPonderadosRiesgoCreditícioDeduccionesPatrimonio { get; set; }
-        public decimal CapitalRequeridoRiesgoMercado { get; set; }
-        public decimal ActivosContingentesPonderadosRiesgosCreditíciosMercado { get; set; }
-        public decimal IndiceSolvencia { get; set; }
+        public double PatrimonioTecnicoAjustado { get; set; }
+        public double ActivosContingentesPonderadosRiesgoCreditícioDeduccionesPatrimonio { get; set; }
+        public double CapitalRequeridoRiesgoMercado { get; set; }
+        public double ActivosContingentesPonderadosRiesgosCreditíciosMercado { get; set; }
+        public double IndiceSolvencia { get; set; }
 
     }
 }

@@ -15,20 +15,42 @@ namespace ImportSuperIntendencia
     {
         static void Main(string[] args)
         {
-            EstadosFinancieros();
-            CarteraCreditos();
-            IndicadoresFinancieros();
-            SolvenciaComponentes();
+             EstadosFinancieros();
+             CarteraCreditos();
+             IndicadoresFinancieros();
+             SolvenciaComponentes();
+            //Pivot();
         }
 
+        //public static void Pivot()
+        //{
+        //    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+        //    var client = new WebClient();
+
+        //    String url = @"C:\temp\B4082020.xlsx";
+
+        //    using (var package = new ExcelPackage(new FileInfo(url)))
+        //    {
+        //        var firstSheet = package.Workbook.Worksheets[0];
+
+        //        int totalRows = firstSheet.Dimension.End.Row;
+        //        int totalCols = firstSheet.Dimension.End.Column;
+        //        var range = firstSheet.Cells[1, 1, 1, totalCols];
+
+        //        var test = firstSheet.Cells[6, 1];
+
+        //        //int MN = GetCell("VOLUMEN", fullPath, "Cuadro 2");
+        //    }
+        //}
         public static void IndicadoresFinancieros()
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
             var client = new WebClient();
 
-            String url = @"https://www.sib.gob.do/sites/default/files/nuevosdocumentos/estadisticas/seriestiempo/C-Indicadores-Financieros.xlsx";
-            var fullPath = Path.GetFullPath(@"c:\apps\if.xlsx");
+            String url = @"https://sb.gob.do/sites/default/files/nuevosdocumentos/estadisticas/seriestiempo/C-Indicadores-Financieros.xlsx";
+            var fullPath = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory + @"\if.xlsx");
             client.DownloadFile(url, fullPath);
             using (var package = new ExcelPackage(new FileInfo(fullPath)))
             {
@@ -50,10 +72,10 @@ namespace ImportSuperIntendencia
                         {
                             var maxDateIF_Volumen = context.IF_Volumen.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                             var maxDateIF_Rentabilidad = context.IF_Rentabilidad.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
-                            var maxDateIF_Liquidez = context.IF_Liquidez.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault(); 
+                            var maxDateIF_Liquidez = context.IF_Liquidez.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                             var maxDateIF_EstructuraCarteraCreditos = context.IF_EstructuraCarteraCreditos.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                             var maxDateIF_EstructuraActivos = context.IF_EstructuraActivos.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
-                            var maxDateIF_EstructuraPasivos = context.IF_EstructuraPasivos.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault(); 
+                            var maxDateIF_EstructuraPasivos = context.IF_EstructuraPasivos.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                             var maxDateIF_Capital = context.IF_Capital.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                             var maxDateIF_Gestion = context.IF_Gestion.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                             var maxDateIF_EstructuraGastosGeneralesAdministrativos = context.IF_EstructuraGastosGeneralesAdministrativos.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
@@ -101,7 +123,7 @@ namespace ImportSuperIntendencia
                                     Fecha = date,
                                     TotalCaptacionesObligConCosto = decimal.Parse((firstSheet.Cells[MN + 12, i].Value ?? 0).ToString()),
                                     TotalCaptaciones = decimal.Parse((firstSheet.Cells[MN + 13, i].Value ?? 0).ToString()),
-                                    TotalDepositos= decimal.Parse((firstSheet.Cells[MN + 14, i].Value ?? 0).ToString()),
+                                    TotalDepositos = decimal.Parse((firstSheet.Cells[MN + 14, i].Value ?? 0).ToString()),
                                     TotalActivos = decimal.Parse((firstSheet.Cells[MN + 15, i].Value ?? 0).ToString()),
                                     ActivosProductivos = decimal.Parse((firstSheet.Cells[MN + 16, i].Value ?? 0).ToString())
                                 };
@@ -140,8 +162,8 @@ namespace ImportSuperIntendencia
                                 };
                                 context.IF_EstructuraActivos.Add(std);
                                 context.SaveChanges();
-                            }      
-                            
+                            }
+
                             if (date > maxDateIF_EstructuraPasivos)
                             {
                                 var std = new IF_EstructuraPasivos()
@@ -156,11 +178,11 @@ namespace ImportSuperIntendencia
                                     DepositosALaVista = decimal.Parse((firstSheet.Cells[MN + 36, i].Value ?? 0).ToString()),
                                     DepositosAhorro = decimal.Parse((firstSheet.Cells[MN + 37, i].Value ?? 0).ToString()),
                                     DepositosPlazo = decimal.Parse((firstSheet.Cells[MN + 38, i].Value ?? 0).ToString()),
-                                   
+
                                 };
                                 context.IF_EstructuraPasivos.Add(std);
                                 context.SaveChanges();
-                            }       
+                            }
 
                             if (date > maxDateIF_Capital)
                             {
@@ -217,7 +239,7 @@ namespace ImportSuperIntendencia
                                     TotalGastosGeneralesAdministrativosActivosTotales = decimal.Parse((firstSheet.Cells[MN + 62, i].Value ?? 0).ToString()),
                                     GastosExplotacionActivosProductivos = decimal.Parse((firstSheet.Cells[MN + 63, i].Value ?? 0).ToString()),
                                     GastoPersonalGastosExplotacion = decimal.Parse((firstSheet.Cells[MN + 64, i].Value ?? 0).ToString()),
-                                    
+
                                 };
                                 context.IF_Gestion.Add(std);
                                 context.SaveChanges();
@@ -231,7 +253,8 @@ namespace ImportSuperIntendencia
                                     Fecha = date,
                                     SueldosCompensacionesPersonal = decimal.Parse((firstSheet.Cells[MN + 66, i].Value ?? 0).ToString()),
                                     OtrosGastosGenerales = decimal.Parse((firstSheet.Cells[MN + 67, i].Value ?? 0).ToString()),
-                                    TotalGastosGeneralesAdministrativos = decimal.Parse((firstSheet.Cells[MN + 68, i].Value ?? 0).ToString())                                                                    };
+                                    TotalGastosGeneralesAdministrativos = decimal.Parse((firstSheet.Cells[MN + 68, i].Value ?? 0).ToString())
+                                };
                                 context.IF_EstructuraGastosGeneralesAdministrativos.Add(std);
                                 context.SaveChanges();
                             }
@@ -247,8 +270,8 @@ namespace ImportSuperIntendencia
 
             var client = new WebClient();
 
-            String url = @"https://sib.gob.do/sites/default/files/nuevosdocumentos/estadisticas/seriestiempo/E-Solvencia-y-sus-Componentes_0.xlsx";
-            var fullPath = Path.GetFullPath(@"c:\apps\sc.xlsx");
+            String url = @"https://sb.gob.do/sites/default/files/nuevosdocumentos/estadisticas/seriestiempo/E-Solvencia-y-sus-Componentes.xlsx";
+            var fullPath = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory + @"\sc.xlsx");
             client.DownloadFile(url, fullPath);
             using (var package = new ExcelPackage(new FileInfo(fullPath)))
             {
@@ -261,7 +284,7 @@ namespace ImportSuperIntendencia
 
                 for (int i = 2; i <= totalCols; i++)
                 {
-                    Console.WriteLine(firstSheet.Cells[MN - 1, i].Text);
+                    Console.WriteLine(firstSheet.Cells[MN - 8, i].Text);
 
                     using (var context = new DataContext())
                     {
@@ -276,11 +299,11 @@ namespace ImportSuperIntendencia
                             {
                                 //MN = 11
                                 Fecha = date,
-                                PatrimonioTecnicoAjustado = decimal.Parse((firstSheet.Cells[MN + 1, i].Value ?? 0).ToString()),
-                                ActivosContingentesPonderadosRiesgoCreditícioDeduccionesPatrimonio = decimal.Parse((firstSheet.Cells[MN + 2, i].Value ?? 0).ToString()),
-                                CapitalRequeridoRiesgoMercado = decimal.Parse((firstSheet.Cells[MN + 3, i].Value ?? 0).ToString()),
-                                ActivosContingentesPonderadosRiesgosCreditíciosMercado = decimal.Parse((firstSheet.Cells[MN + 4, i].Value ?? 0).ToString()),
-                                IndiceSolvencia = decimal.Parse((firstSheet.Cells[MN + 5, i].Value ?? 0).ToString()),                      
+                                PatrimonioTecnicoAjustado = double.Parse((firstSheet.Cells[MN + 1, i].Value ?? 0).ToString()),
+                                ActivosContingentesPonderadosRiesgoCreditícioDeduccionesPatrimonio = double.Parse((firstSheet.Cells[MN + 2, i].Value ?? 0).ToString()),
+                                CapitalRequeridoRiesgoMercado = double.Parse((firstSheet.Cells[MN + 3, i].Value ?? 0).ToString()),
+                                ActivosContingentesPonderadosRiesgosCreditíciosMercado = double.Parse((firstSheet.Cells[MN + 4, i].Value ?? 0).ToString()),
+                                IndiceSolvencia = double.Parse((firstSheet.Cells[MN + 5, i].Value ?? 0).ToString()),
                             };
                             context.SC_SolvenciaComponentes.Add(std);
                             context.SaveChanges();
@@ -296,8 +319,8 @@ namespace ImportSuperIntendencia
 
             var client = new WebClient();
 
-            String url = @"https://sib.gob.do/sites/default/files/nuevosdocumentos/estadisticas/seriestiempo/D-Cartera-de-Creditos_0.xlsx";
-            var fullPath = Path.GetFullPath(@"c:\apps\cc.xlsx");
+            String url = @"https://sb.gob.do/sites/default/files/nuevosdocumentos/estadisticas/seriestiempo/D-Cartera-de-Creditos_0.xlsx";
+            var fullPath = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory + @"\cc.xlsx");
             client.DownloadFile(url, fullPath);
             using (var package = new ExcelPackage(new FileInfo(fullPath)))
             {
@@ -336,13 +359,13 @@ namespace ImportSuperIntendencia
                                 CreditosComercialesMenoresDeudoresMN = decimal.Parse((firstSheet.Cells[MN + 15, i].Value ?? 0).ToString()),
                                 CreditosComercialesMicrocreditoMN = decimal.Parse((firstSheet.Cells[MN + 21, i].Value ?? 0).ToString()),
                                 CreditosAtravesTarjetasCreditosPersonalesMN = decimal.Parse((firstSheet.Cells[MN + 27, i].Value ?? 0).ToString()),
-                                CreditosConsumoMN = decimal.Parse((firstSheet.Cells[MN + 33, i].Value ?? 0).ToString()),
+                                CreditosConsumoMN = decimal.Parse((firstSheet.Cells[MN + 32, i].Value ?? 0).ToString()),
                                 CreditosHipotecariosMN = decimal.Parse((firstSheet.Cells[MN + 39, i].Value ?? 0).ToString()),
                                 CreditosComercialesMayoresDeudoresEXT = decimal.Parse((firstSheet.Cells[MN + 47, i].Value ?? 0).ToString()),
                                 CreditosComercialesMedianosDeudoresEXT = decimal.Parse((firstSheet.Cells[MN + 52, i].Value ?? 0).ToString()),
                                 CreditosComercialesMenoresDeudoresEXT = decimal.Parse((firstSheet.Cells[MN + 56, i].Value ?? 0).ToString()),
                                 CreditosComercialesMicrocreditoEXT = decimal.Parse((firstSheet.Cells[MN + 61, i].Value ?? 0).ToString()),
-                                CreditosAtravesTarjetasCreditosPersonalesEXT = decimal.Parse((firstSheet.Cells[MN + 65, i].Value ?? 0).ToString()),
+                                CreditosAtravesTarjetasCreditosPersonalesEXT = decimal.Parse((firstSheet.Cells[MN + 64, i].Value ?? 0).ToString()),
                                 CreditosConsumoEXT = decimal.Parse((firstSheet.Cells[MN + 69, i].Value ?? 0).ToString()),
                                 CreditosHipotecariosEXT = decimal.Parse((firstSheet.Cells[MN + 72, i].Value ?? 0).ToString()),
                                 GrandTotal = decimal.Parse((firstSheet.Cells[MN + 73, i].Value ?? 0).ToString()),
@@ -361,8 +384,8 @@ namespace ImportSuperIntendencia
 
             var client = new WebClient();
 
-            String url = "https://www.sib.gob.do/sites/default/files/nuevosdocumentos/estadisticas/seriestiempo/B-Estados-Financieros_1.xlsx";
-            var fullPath = Path.GetFullPath(@"c:\apps\1.xlsx");
+            String url = "https://sb.gob.do/sites/default/files/nuevosdocumentos/estadisticas/seriestiempo/B-Estados-Financieros_1.xlsx";
+            var fullPath = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory + @"\1.xlsx");
             client.DownloadFile(url, fullPath);
 
             using (var package = new ExcelPackage(new FileInfo(fullPath)))
@@ -411,6 +434,10 @@ namespace ImportSuperIntendencia
                 var maxDateEF_OtrosGastosOperacionales = context2.EF_OtrosGastosOperacionales.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                 var maxDateEF_GastosOperativos = context2.EF_GastosOperativos.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                 var maxDateEF_OtrosIngresos = context2.EF_OtrosIngresos.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
+                var maxDateEF_MargenFinancieroNeto = context2.EF_MargenFinancieroNeto.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
+                var maxDateEF_ResultadoOperacional = context2.EF_ResultadoOperacional.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
+                var maxDateEF_MargenFinancieroBruto = context2.EF_MargenFinancieroBruto.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
+                var maxDateEF_ResultadoAntesImpuestos = context2.EF_ResultadoAntesImpuestos.OrderByDescending(t => t.Fecha).Select(t => t.Fecha).FirstOrDefault();
                 #endregion
                 context2.Dispose();
 
@@ -837,6 +864,21 @@ namespace ImportSuperIntendencia
                         }
                         #endregion
 
+                        #region EF_OtrosGatosOperacionales
+                        if (date > maxDateEF_OtrosGastosOperacionales)
+                        {
+                            var fd = new EF_OtrosGastosOperacionales()
+                            {
+                                Fecha = date,
+                                ComisionesporServicios = decimal.Parse((firstSheet.Cells[Activos + 165, i].Value ?? 0).ToString()),
+                                GastosDiversos = decimal.Parse((firstSheet.Cells[Activos + 166, i].Value ?? 0).ToString()),
+                                Subtotal = decimal.Parse((firstSheet.Cells[Activos + 167, i].Value ?? 0).ToString()),
+                            };
+                            context.EF_OtrosGastosOperacionales.Add(fd);
+                            context.SaveChanges();
+                        }
+                        #endregion
+
                         #region EF_GastosFinancieros
                         if (date > maxDateEF_GastosFinancieros)
                         {
@@ -901,6 +943,72 @@ namespace ImportSuperIntendencia
                             context.SaveChanges();
                         }
                         #endregion
+
+                        #region EF_MargenFinancieroNeto
+                        if (date > maxDateEF_MargenFinancieroNeto)
+                        {
+
+
+                            var std = new EF_MargenFinancieroNeto()
+                            {
+                                Fecha = date,
+                                MargenFinacieroNeto = decimal.Parse((firstSheet.Cells[Activos + 154, i].Value ?? 0).ToString()),
+                                IngresosPorDiferenciaCambio = decimal.Parse((firstSheet.Cells[Activos + 156, i].Value ?? 0).ToString())
+                            };
+                            context.EF_MargenFinancieroNeto.Add(std);
+                            context.SaveChanges();
+                        }
+                        #endregion EF_MargenFinancieroNeto     
+
+                        #region EF_MargenFinancieroBruto
+                        if (date > maxDateEF_MargenFinancieroBruto)
+                        {
+
+
+                            var std = new EF_MargenFinancieroBruto()
+                            {
+                                Fecha = date,
+                                MargenFinancieroBruto = decimal.Parse((firstSheet.Cells[Activos + 148, i].Value ?? 0).ToString()),
+                                ProvisionesCarteraCreditos = decimal.Parse((firstSheet.Cells[Activos + 150, i].Value ?? 0).ToString()),
+                                ProvisionInversiones = decimal.Parse((firstSheet.Cells[Activos + 151, i].Value ?? 0).ToString()),
+                                Subtotal = decimal.Parse((firstSheet.Cells[Activos + 152, i].Value ?? 0).ToString())
+                            };
+                            context.EF_MargenFinancieroBruto.Add(std);
+                            context.SaveChanges();
+                        }
+                        #endregion EF_MargenFinancieroNeto  
+
+                        #region EF_MargenFinancieroBruto
+                        if (date > maxDateEF_ResultadoOperacional)
+                        {
+                            var std = new EF_ResultadoOperacional()
+                            {
+                                Fecha = date,
+                                ResultadoOperacional = decimal.Parse((firstSheet.Cells[Activos + 177, i].Value ?? 0).ToString()),
+                                OtrosIngresosGastos = firstSheet.Cells[Activos + 179, i].Text == "" ? 0 : decimal.Parse(firstSheet.Cells[Activos + 179, i].Value.ToString()),
+                                OtrosIngresos = decimal.Parse((firstSheet.Cells[Activos + 180, i].Value ?? 0).ToString()),
+                                OtrosGastos = decimal.Parse((firstSheet.Cells[Activos + 181, i].Value ?? 0).ToString()),
+                                Subtotal = decimal.Parse((firstSheet.Cells[Activos + 182, i].Value ?? 0).ToString()),
+                            };
+                            context.EF_ResultadoOperacional.Add(std);
+                            context.SaveChanges();
+                        }
+                        #endregion EF_ResultadoOperacional                        
+
+                        #region EF_ResultadoAntesImpuestos
+                        if (date > maxDateEF_ResultadoAntesImpuestos)
+                        {
+                            var std = new EF_ResultadoAntesImpuestos()
+                            {
+                                Fecha = date,
+                                ResultadoAntesImpuestos = decimal.Parse((firstSheet.Cells[Activos + 184, i].Value ?? 0).ToString()),
+                                ImpuestosSobreLaRenta = firstSheet.Cells[Activos + 186, i].Text == "" ? 0 : decimal.Parse(firstSheet.Cells[Activos + 186, i].Value.ToString()),
+                                ResultadoEjercicio = decimal.Parse((firstSheet.Cells[Activos + 188, i].Value ?? 0).ToString()),
+                            };
+                            context.EF_ResultadoAntesImpuestos.Add(std);
+                            context.SaveChanges();
+                        }
+                        #endregion EF_ResultadoAntesImpuestos
                     }
 
                 }
