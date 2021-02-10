@@ -49,7 +49,7 @@ namespace ImportSuperIntendencia
 
             var client = new WebClient();
 
-            String url = @"https://sb.gob.do/sites/default/files/nuevosdocumentos/estadisticas/seriestiempo/C-Indicadores-Financieros.xlsx";
+            String url = @"https://sb.gob.do/sites/default/files/nuevosdocumentos/estadisticas/seriestiempo/C-Indicadores-Financieros_0.xlsx";
             var fullPath = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory + @"\if.xlsx");
             client.DownloadFile(url, fullPath);
             using (var package = new ExcelPackage(new FileInfo(fullPath)))
@@ -319,7 +319,7 @@ namespace ImportSuperIntendencia
 
             var client = new WebClient();
 
-            String url = @"https://sb.gob.do/sites/default/files/nuevosdocumentos/estadisticas/seriestiempo/D-Cartera-de-Creditos_0.xlsx";
+            String url = @"https://sb.gob.do/sites/default/files/nuevosdocumentos/estadisticas/seriestiempo/D-Cartera-de-Creditos.xlsx";
             var fullPath = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory + @"\cc.xlsx");
             client.DownloadFile(url, fullPath);
             using (var package = new ExcelPackage(new FileInfo(fullPath)))
@@ -384,7 +384,7 @@ namespace ImportSuperIntendencia
 
             var client = new WebClient();
 
-            String url = "https://sb.gob.do/sites/default/files/nuevosdocumentos/estadisticas/seriestiempo/B-Estados-Financieros_1.xlsx";
+            String url = "https://sb.gob.do/sites/default/files/nuevosdocumentos/estadisticas/seriestiempo/B-Estados-Financieros.xlsx";
             var fullPath = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory + @"\1.xlsx");
             client.DownloadFile(url, fullPath);
 
