@@ -22,34 +22,14 @@ namespace ImportSuperIntendencia
             //Pivot();
         }
 
-        //public static void Pivot()
-        //{
-        //    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-        //    var client = new WebClient();
-
-        //    String url = @"C:\temp\B4082020.xlsx";
-
-        //    using (var package = new ExcelPackage(new FileInfo(url)))
-        //    {
-        //        var firstSheet = package.Workbook.Worksheets[0];
-
-        //        int totalRows = firstSheet.Dimension.End.Row;
-        //        int totalCols = firstSheet.Dimension.End.Column;
-        //        var range = firstSheet.Cells[1, 1, 1, totalCols];
-
-        //        var test = firstSheet.Cells[6, 1];
-
-        //        //int MN = GetCell("VOLUMEN", fullPath, "Cuadro 2");
-        //    }
-        //}
         public static void IndicadoresFinancieros()
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
             var client = new WebClient();
 
-            String url = @"https://sb.gob.do/sites/default/files/nuevosdocumentos/estadisticas/seriestiempo/C-Indicadores-Financieros_0.xlsx";
+            String url = @"https://sb.gob.do/sites/default/files/nuevosdocumentos/estadisticas/seriestiempo/C-Indicadores-Financieros.xlsx";
             var fullPath = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory + @"\if.xlsx");
             client.DownloadFile(url, fullPath);
             using (var package = new ExcelPackage(new FileInfo(fullPath)))
